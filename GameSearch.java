@@ -1,8 +1,10 @@
 package GameSearchDomineering;
 
+import java.io.IOException;
+
 public abstract class GameSearch {
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     public static boolean PROGRAM = false;
     public static boolean HUMAN = true;
 
@@ -16,7 +18,7 @@ public abstract class GameSearch {
     public abstract Position[] possibleMoves(Position p , boolean player);
     public abstract Position makeMove(Position p,boolean player,Move move);
     public abstract boolean reachedMaxDepth(Position p ,int depth);
-    public abstract Move createMove();
+    public abstract Move createMove() throws IOException;
 
 
 

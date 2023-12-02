@@ -5,7 +5,11 @@ public class DomineeringPosition  extends Position{
       final static public int HUMAN = 1;
       final static public int PROGRAM = -1;
 
-      int[][] board = new int[6][6];
+      int[][] board ;
+
+      DomineeringPosition(){
+          board = new int[6][6];
+      }
 
 
       public void displayBoard(){
