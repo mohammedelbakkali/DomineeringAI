@@ -50,6 +50,20 @@ public class Domineering extends GameSearch{
 
     @Override
     public void printPosition(Position p) {
+            DomineeringPosition pos = (DomineeringPosition)p;
+            for(int i = 0;i<6;i++){
+                for(int j = 0;j<6;j++){
+                     if(pos.board[i][j]==DomineeringPosition.HUMAN){
+                           System.out.print("V    ");
+                     }else if(pos.board[i][j]==DomineeringPosition.PROGRAM){
+                           System.out.print("H    ");
+                     }else if(pos.board[i][j]==DomineeringPosition.BLANK) {
+                           System.out.print("0   ");
+                     }
+
+                }
+                System.out.println();
+            }
 
     }
 
@@ -344,16 +358,16 @@ public class Domineering extends GameSearch{
    }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Position pos = new DomineeringPosition();
         Domineering d = new Domineering();
          int [][] bord ;
           bord = new int[][]{{1,0,0,0,0,0},
                              {1,0,0,0,0,0},
+                             {0,-1,-1,0,0,0},
                              {0,0,0,0,0,0},
-                             {0,0,0,0,0,0},
-                             {0,0,0,0,0,0},
-                             {0,0,0,0,0,0}};
+                             {0,0,0,1,0,0},
+                             {0,0,0,1,0,0}};
          ((DomineeringPosition)pos).board =bord;
         //d.possibleMoves(pos,false);
 
@@ -371,9 +385,13 @@ public class Domineering extends GameSearch{
             System.out.println("player lost");
        */
 
-            Move mv = d.createMove();
-           Position poss =  d.makeMove(pos,false,mv);
-            ((DomineeringPosition) poss).displayBoard();
+           // Move mv = d.createMove();
+          // Position poss =  d.makeMove(pos,false,mv);
+         //   ((DomineeringPosition) poss).displayBoard();
+
+          d.printPosition(pos);
+
+
     }
 
 
