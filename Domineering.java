@@ -3,15 +3,25 @@ package GameSearchDomineering;
 import GameSearchDomineering.ui.CellPanel;
 import GameSearchDomineering.ui.ComponentPanel;
 import GameSearchDomineering.ui.Coordinates;
+import GameSearchDomineering.ui.GameUi;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 
+import static GameSearchDomineering.ui.ComponentPanel.getCellPanel;
+
 public class Domineering extends GameSearch{
+    public    ComponentPanel componentPanel;
+    public DomineeringPosition p;
+    public Domineering(){}
+    Domineering(ComponentPanel a){
+        this.componentPanel=a;
+    }
 
     @Override
-    public boolean drawPosition(Position p) {
+    public boolean drawnPosition(Position p) {
         boolean isFinished = true;
         int countVertical =0;
         int countHorizentale=0;
@@ -51,18 +61,25 @@ public class Domineering extends GameSearch{
     @Override
     public void printPosition(Position p) {
             DomineeringPosition pos = (DomineeringPosition)p;
-            for(int i = 0;i<6;i++){
-                for(int j = 0;j<6;j++){
-                     if(pos.board[i][j]==DomineeringPosition.HUMAN){
-                           System.out.print("V    ");
-                     }else if(pos.board[i][j]==DomineeringPosition.PROGRAM){
-                           System.out.print("H    ");
-                     }else if(pos.board[i][j]==DomineeringPosition.BLANK) {
-                           System.out.print("0   ");
-                     }
 
+            if(pos!=null){
+                for(int i = 0;i<6;i++){
+                    for(int j = 0;j<6;j++){
+                        if(pos.board[i][j]==DomineeringPosition.HUMAN){
+                            System.out.print("V    ");
+                        }else if(pos.board[i][j]==DomineeringPosition.PROGRAM){
+                            System.out.print("H    ");
+                        }else if(pos.board[i][j]==DomineeringPosition.BLANK) {
+                            System.out.print("0    ");
+                        }
+
+                    }
+                    System.out.println();
                 }
-                System.out.println();
+            }else{
+              if(GameSearch.DEBUG){
+                  System.out.println("la case n'est pas vide");
+              }
             }
 
     }
@@ -73,7 +90,7 @@ public class Domineering extends GameSearch{
         if(depth>=5) return true;
         if(wonPosition(p,false)) ret=true;
         if(wonPosition(p,true)) ret=true;
-        if(drawPosition(p)) ret=true;
+        if(drawnPosition(p)) ret=true;
         if(GameSearch.DEBUG) {
              System.out.println("reachedMaxDepth : pos" );
              ((DomineeringPosition)p).displayBoard();
@@ -186,16 +203,42 @@ public class Domineering extends GameSearch{
         DomineeringMove mv = (DomineeringMove)move;
         DomineeringPosition pos = (DomineeringPosition)p;
         DomineeringPosition pos2 = affecterPosition(pos);
+        // colorer
+
+
+
         if(isAdjExist(p,player,move)){
             int pp;
             if (player){
                 pp=1;
                 pos2.board[mv.moveIndexRow][mv.moveIndexColl]=pp;
                 pos2.board[mv.moveIndexRow+1][mv.moveIndexColl]=pp;
+                Coordinates c = new Coordinates(mv.moveIndexRow,mv.moveIndexColl);
+                CellPanel cellPanel = searchAdjCell(c, true);
+                CellPanel cellPanel1 = getCellPanel(c);
+                //ComponentPanel.DisplayPanelBord();
+                System.out.println("x = "+mv.moveIndexRow+" y = "+mv.moveIndexColl);
+               if(cellPanel!=null && cellPanel1!=null){
+                   cellPanel.setBackground(Color.BLUE);
+                   cellPanel.clicked=true;
+                   cellPanel1.clicked=true;
+                   cellPanel1.setBackground(Color.BLUE);
+               }
             }else{
                 pp=-1;
                 pos2.board[mv.moveIndexRow][mv.moveIndexColl]=pp;
                 pos2.board[mv.moveIndexRow][mv.moveIndexColl+1]=pp;
+                Coordinates c2 = new Coordinates(mv.moveIndexRow,mv.moveIndexColl);
+                CellPanel cellPanel = searchAdjCell(c2, false);
+                CellPanel cellPanel1 = getCellPanel(c2);
+                //ComponentPanel.DisplayPanelBord();
+                System.out.println("x = "+mv.moveIndexRow+" y = "+mv.moveIndexColl);
+                if(cellPanel!=null && cellPanel1!=null){
+                    cellPanel.setBackground(Color.GREEN);
+                    cellPanel.clicked=true;
+                    cellPanel1.clicked=true;
+                    cellPanel1.setBackground(Color.GREEN);
+                }
             }
 
         }else {
@@ -253,7 +296,7 @@ public class Domineering extends GameSearch{
 
 
     @Override
-    public Move createMove() {
+    public  Move createMove() {
         if(GameSearch.DEBUG) System.out.println("Create Move Fonction :");
         int i = 0;
         int j = 0;
@@ -270,33 +313,44 @@ public class Domineering extends GameSearch{
                 return m;
 
     }
+    public static Move createMoveOFinterface(){
+        DomineeringMove m = new DomineeringMove();
+
+        m.moveIndexRow=CellPanel.coordinatesPointer.row;
+        m.moveIndexColl=CellPanel.coordinatesPointer.col;
+
+        return m;
+    }
 
 
 
    /**---------- methodes complementaires ----------*/
 
-   public CellPanel searchAdjCell(Coordinates coordinates,boolean player){
+   public static CellPanel searchAdjCell(Coordinates coordinates,boolean player){
        Map<CellPanel, Coordinates> map =  ComponentPanel.getMapCellPanel();
-          if(player){ //search vertical
-
-              for (Map.Entry<CellPanel, Coordinates> item : map.entrySet()) {
-                   if(item.getValue().row==coordinates.row+1 && item.getValue().col==coordinates.col && !item.getKey().clicked){
-                       return item.getKey();
-                   }
-                   else return null;
-              }
-
-          }else{
-
-              for (Map.Entry<CellPanel, Coordinates> item : map.entrySet()) {
-                  if(item.getValue().row==coordinates.row && item.getValue().col==coordinates.col+1 && !item.getKey().clicked){
-                      return item.getKey();
-                  }
-                  else return null;
-              }
-
-          }
-
+                    if(player){
+                          if(coordinates.row==5 && coordinates.col==0 || coordinates.row==5 && coordinates.col==1 || coordinates.row==5 && coordinates.col==2
+                                  || coordinates.row==5 && coordinates.col==3 ||  coordinates.row==5 && coordinates.col==4 || coordinates.row==5 && coordinates.col==5){
+                               return null;
+                          }
+                        for(Map.Entry<CellPanel,Coordinates> item :map.entrySet()){
+                            System.out.println(item.getValue().row+";"+item.getValue().col);
+                            if(item.getValue().row==coordinates.row+1 && item.getValue().col==coordinates.col && !item.getKey().clicked){
+                                return item.getKey();
+                            }
+                        }
+                    }else{
+                        if(coordinates.row==0 && coordinates.col==5 || coordinates.row==1 && coordinates.col==5 || coordinates.row==2 && coordinates.col==5
+                                || coordinates.row==3 && coordinates.col==5 ||  coordinates.row==4 && coordinates.col==5 || coordinates.row==5 && coordinates.col==5){
+                            return null;
+                        }
+                        for(Map.Entry<CellPanel,Coordinates> item :map.entrySet()){
+                            System.out.println(item.getValue().row+";"+item.getValue().col);
+                            if(item.getValue().row==coordinates.row && item.getValue().col==coordinates.col+1 && !item.getKey().clicked){
+                                return item.getKey();
+                            }
+                        }
+                    }
           return null;
    }
 
@@ -358,6 +412,7 @@ public class Domineering extends GameSearch{
    }
 
 
+   /**
     public static void main(String[] args) throws IOException {
         Position pos = new DomineeringPosition();
         Domineering d = new Domineering();
@@ -371,7 +426,7 @@ public class Domineering extends GameSearch{
          ((DomineeringPosition)pos).board =bord;
         //d.possibleMoves(pos,false);
 
-     /**
+
        boolean e =  d.drawPosition(pos);
        if(e)
            System.out.println("match fini");
@@ -383,7 +438,7 @@ public class Domineering extends GameSearch{
             System.out.println("player won");
         else
             System.out.println("player lost");
-       */
+
 
            // Move mv = d.createMove();
           // Position poss =  d.makeMove(pos,false,mv);
@@ -394,7 +449,15 @@ public class Domineering extends GameSearch{
 
     }
 
+*/
 
+   static public void main(String [] args) throws IOException {
+       ComponentPanel cp = new ComponentPanel();
+       new GameUi(cp);
+       DomineeringPosition p = new DomineeringPosition();
 
+       Domineering ttt = new Domineering(cp);
+
+   }
 
 }
