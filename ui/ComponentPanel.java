@@ -11,12 +11,7 @@ import java.util.Map;
 
 public class ComponentPanel extends JPanel {
        static Map<CellPanel,Coordinates> mapCellPanel = new LinkedHashMap<>();
-    private GameController gameController; // Add this field
     public static DomineeringPosition    domineeringPosition;
-
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
-    }
 
 
 

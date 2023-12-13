@@ -453,10 +453,10 @@ public class Domineering extends GameSearch{
 
    static public void main(String [] args) throws IOException {
        ComponentPanel cp = new ComponentPanel();
-       new GameUi(cp);
        DomineeringPosition p = new DomineeringPosition();
-
        Domineering ttt = new Domineering(cp);
+       new GameUi(cp);
+       ttt.playGameHumenVsHuman(p,true);
 
    }
 
