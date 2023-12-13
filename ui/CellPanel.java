@@ -8,14 +8,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import static GameSearchDomineering.Domineering.createMoveOFinterface;
+
 import static GameSearchDomineering.Domineering.searchAdjCell;
 
 public class CellPanel extends JPanel {
 
     private Color defaultBackground;
     private Coordinates coordinates;
-    public boolean clicked = false; //
+    public static boolean clicked = false; //
+    public static boolean isClickedPanel = false; //
     private ComponentPanel componentPanel;
     private static int counterVertical= 0 ;
     private static  int counterHorizontal= 0;
@@ -55,9 +56,11 @@ public class CellPanel extends JPanel {
 
                     adjTrue=searchAdjCell(coordinates,true);
                     if(adjTrue!=null){
+                        isClickedPanel=true;
                         setBackground(Color.BLUE);
                         adjTrue.setBackground(Color.BLUE);
                         clicked=true;
+                        coordinatesPointer=coordinates;
                         adjTrue.setClicked(true);
 
                     }
@@ -66,10 +69,12 @@ public class CellPanel extends JPanel {
 
                     adjFalse=searchAdjCell(coordinates,false);
                     if(adjFalse!=null){
+                        isClickedPanel=true;
                         setBackground(Color.GREEN);
                         adjFalse.setBackground(Color.GREEN);
                         clicked=true;
                         adjFalse.setClicked(true);
+                        coordinatesPointer=coordinates;
                     }else{
                         System.out.println("null");
                     }

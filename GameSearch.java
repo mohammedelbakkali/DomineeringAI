@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import static GameSearchDomineering.Domineering.createMoveOFinterface;
 
 public abstract class GameSearch {
 
@@ -27,20 +26,25 @@ public abstract class GameSearch {
     public abstract Position makeMove(Position p,boolean player,Move move);
     public abstract boolean reachedMaxDepth(Position p ,int depth);
     public abstract Move createMove() throws IOException;
-
+    public abstract Move createMoveOFinterface();
     public  Position positionPanel;
 
     public  void playGameHumenVsHuman(Position startingPosition, boolean role) throws IOException {
-         positionPanel=startingPosition;
+        positionPanel = startingPosition;
+        CellPanel.setRole(!role); // Set the initial role in the GUI
         while (true) {
+
         if(!role){
             printPosition(startingPosition);
             System.out.print("\nYour move HUMAN 1:");
             System.out.println("changer le role");
+
             Move mv1 = createMove();
+            //DomineeringMove mvCast = (DomineeringMove)mv1;
             startingPosition = makeMove(startingPosition, PROGRAM, mv1);
             printPosition(startingPosition);
-
+         //   System.out.println("mv1 ===========================================: x = "+mvCast.moveIndexRow+" y= "+mvCast.moveIndexColl);
+            CellPanel.isClickedPanel=false;
             if (wonPosition(startingPosition, PROGRAM)) {
                 System.out.println("Program won");
                 break;
@@ -53,14 +57,17 @@ public abstract class GameSearch {
                 System.out.println("Drawn game");
                 break;
             }
-            role=!role;
+            role=true;
+            CellPanel.setRole(role); // Set the initial role in the GUI
         }else{
             System.out.print("\nYour move HUMAN 2:");
             System.out.println("changer le role");
+
             Move mv1 = createMove();
             startingPosition = makeMove(startingPosition, HUMAN, mv1);
             printPosition(startingPosition);
-            role=!role;
+            role=false;
+            CellPanel.setRole(role); // Set the initial role in the GUI
             if (wonPosition(startingPosition, HUMAN)) {
                 System.out.println("Human won");
                 break;
@@ -72,18 +79,6 @@ public abstract class GameSearch {
                 break;
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
         }
     }

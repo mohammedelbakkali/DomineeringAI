@@ -313,11 +313,16 @@ public class Domineering extends GameSearch{
                 return m;
 
     }
-    public static Move createMoveOFinterface(){
-        DomineeringMove m = new DomineeringMove();
 
-        m.moveIndexRow=CellPanel.coordinatesPointer.row;
-        m.moveIndexColl=CellPanel.coordinatesPointer.col;
+    @Override
+    public  Move createMoveOFinterface(){
+        Coordinates clickedCoordinates = CellPanel.coordinatesPointer;
+
+        if (GameSearch.DEBUG) System.out.println("Create Move Function:");
+
+        DomineeringMove m = new DomineeringMove();
+        m.moveIndexRow = clickedCoordinates.row;
+        m.moveIndexColl = clickedCoordinates.col;
 
         return m;
     }
