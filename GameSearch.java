@@ -32,61 +32,76 @@ public abstract class GameSearch {
     public  void playGameHumenVsHuman(Position startingPosition, boolean role) throws IOException {
         positionPanel = startingPosition;
         //CellPanel.setRole(!role); // Set the initial role in the GUI
-        while (true) {
+        CellPanel.setRole(role);
+        boolean etat=true;
+        while (etat) {
 
-        if(!role){
+            if (startingPosition != null) {
+                if (wonPosition(startingPosition, PROGRAM)) {
+                    System.out.println("Program won");
+                    etat=false;
+                    break;
+                }
+                if (wonPosition(startingPosition, HUMAN)) {
+                    System.out.println("Human won");
+                    etat=false;
+                    break;
+                }
+                if (drawnPosition(startingPosition)) {
+                    System.out.println("Drawn game");
+                    etat=false;
+                    break;
+                }
+            } else {
+                System.out.println("Game ended unexpectedly. Starting position is null.");
+                break;
+            }
+        if(role==false){
             printPosition(startingPosition);
-            System.out.print("\nYour move HUMAN 1:");
+            System.out.print("\nYour move PROGRAM:");
             System.out.println("changer le role");
+
             while (!CellPanel.isClickedPanel) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-           Move mv1 = createMoveOFinterface();
+
+            Move mv1 = createMoveOFinterface();
             DomineeringMove mvCast = (DomineeringMove)mv1;
+
+            //Move mv1 = createMove();
             startingPosition = makeMove(startingPosition, PROGRAM, mv1);
             printPosition(startingPosition);
-         System.out.println("mv1 ===========================================: x = "+mvCast.moveIndexRow+" y= "+mvCast.moveIndexColl);
+            System.out.println("mv1 ===========================================: x = "+mvCast.moveIndexRow+" y= "+mvCast.moveIndexColl);
             CellPanel.isClickedPanel=false;
-            if (wonPosition(startingPosition, PROGRAM)) {
-                System.out.println("Program won");
-                break;
-            }
-            if (wonPosition(startingPosition, HUMAN)) {
-                System.out.println("Human won");
-                break;
-            }
-            if (drawnPosition(startingPosition)) {
-                System.out.println("Drawn game");
-                break;
-            }
             role=true;
-            //CellPanel.setRole(role); // Set the initial role in the GUI
+            CellPanel.setRole(role); // Set the initial role in the GUI
         }else{
-            System.out.print("\nYour move HUMAN 2:");
+            System.out.print("\nYour move HUMAN :");
             System.out.println("changer le role");
+
+
             while (!CellPanel.isClickedPanel) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+            CellPanel.isClickedPanel=false;
             Move mv1 = createMoveOFinterface();
+            //Move mv1 = createMove();
             startingPosition = makeMove(startingPosition, HUMAN, mv1);
             printPosition(startingPosition);
             role=false;
             CellPanel.setRole(role); // Set the initial role in the GUI
-            if (wonPosition(startingPosition, HUMAN)) {
-                System.out.println("Human won");
-                break;
-            }
 
             if(startingPosition ==null){
                 System.out.println("Drawn game");
+                etat=false;
                 break;
             }
         }

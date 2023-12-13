@@ -31,7 +31,7 @@ public class Domineering extends GameSearch{
         if(possibleMoves (p, false) != null){
             countHorizentale = possibleMoves (p, false).length;
         }
-        if ( countVertical == 0  || countHorizentale == 0) return true;
+        if ( countVertical == 0  && countHorizentale == 0) return true;
         return false;
     }
 
@@ -40,16 +40,46 @@ public class Domineering extends GameSearch{
         boolean ret = false;
         int countVertical =0;
         int countHorizentale=0;
-        if(possibleMoves (p, player) != null){
-            countVertical = possibleMoves (p, true).length;
+ try{
+
+
+    if (player==true){
+        Position []h= possibleMoves (p, false);
+        Position []v= possibleMoves (p, true);
+        if(v != null){
+            countVertical =v.length;
+            System.out.println(countVertical);
         }
-        if(possibleMoves (p, !player) != null){
-            countHorizentale = possibleMoves (p, false).length;
+        if(h != null){
+            countHorizentale = h.length;
+            System.out.println(countHorizentale);
         }
-        //traitement:
+           if((countVertical !=0  && countHorizentale ==0)) ret = true;
+
+
+    }else if(player==false){
+        Position []h= possibleMoves (p, false);
+        Position []v= possibleMoves (p, true);
+        if(v != null){
+            countVertical =v.length;
+            System.out.println(countVertical);
+        }
+        if(h != null){
+            countHorizentale = h.length;
+            System.out.println(countHorizentale);
+        }
+        if(countHorizentale != 0 && countVertical == 0) ret = true;
+    }else{
         if (countVertical==countHorizentale && countHorizentale == 0) ret=false;
-        else if((countVertical==0  && countHorizentale !=0)) ret = false;
-        else if((countHorizentale==0  && countVertical !=0)) ret = true;
+    }
+
+     //traitement:
+
+
+
+ }catch (Exception e){
+     e.printStackTrace();
+ }
         return ret;
     }
 
@@ -134,13 +164,14 @@ public class Domineering extends GameSearch{
         }else{
             for(int i = 0 ; i<6 ; i++){
                 for (int j = 0 ; j<6 ; j++){
+                    if(pos.board[i][j]==DomineeringPosition.BLANK){
                     if(i==0 && j==5 || i==1 && j==5 || i==2 && j==5 || i==3 && j==5 || i==4 && j==5 || i==5 && j==5) {
                         if(GameSearch.DEBUG){
                             System.out.println("adjacent null !");
                         }
                     }
-                 else  if(pos.board[i][j]==DomineeringPosition.BLANK){
-                        if(pos.board[i][j+1]==DomineeringPosition.BLANK){
+
+                      else  if(pos.board[i][j+1]==DomineeringPosition.BLANK){
                             count++;
                         }else{
                             if(GameSearch.DEBUG){
@@ -217,7 +248,7 @@ public class Domineering extends GameSearch{
                 CellPanel cellPanel = searchAdjCell(c, true);
                 CellPanel cellPanel1 = getCellPanel(c);
                 //ComponentPanel.DisplayPanelBord();
-                System.out.println("x = "+mv.moveIndexRow+" y = "+mv.moveIndexColl);
+              //  System.out.println("x = "+mv.moveIndexRow+" y = "+mv.moveIndexColl);
                if(cellPanel!=null && cellPanel1!=null){
                    cellPanel.setBackground(Color.BLUE);
                    cellPanel.clicked=true;
@@ -232,7 +263,7 @@ public class Domineering extends GameSearch{
                 CellPanel cellPanel = searchAdjCell(c2, false);
                 CellPanel cellPanel1 = getCellPanel(c2);
                 //ComponentPanel.DisplayPanelBord();
-                System.out.println("x = "+mv.moveIndexRow+" y = "+mv.moveIndexColl);
+               // System.out.println("x = "+mv.moveIndexRow+" y = "+mv.moveIndexColl);
                 if(cellPanel!=null && cellPanel1!=null){
                     cellPanel.setBackground(Color.GREEN);
                     cellPanel.clicked=true;
@@ -339,7 +370,7 @@ public class Domineering extends GameSearch{
                                return null;
                           }
                         for(Map.Entry<CellPanel,Coordinates> item :map.entrySet()){
-                            System.out.println(item.getValue().row+";"+item.getValue().col);
+                           // System.out.println(item.getValue().row+";"+item.getValue().col);
                             if(item.getValue().row==coordinates.row+1 && item.getValue().col==coordinates.col && !item.getKey().clicked){
                                 return item.getKey();
                             }
@@ -350,7 +381,7 @@ public class Domineering extends GameSearch{
                             return null;
                         }
                         for(Map.Entry<CellPanel,Coordinates> item :map.entrySet()){
-                            System.out.println(item.getValue().row+";"+item.getValue().col);
+                           // System.out.println(item.getValue().row+";"+item.getValue().col);
                             if(item.getValue().row==coordinates.row && item.getValue().col==coordinates.col+1 && !item.getKey().clicked){
                                 return item.getKey();
                             }
