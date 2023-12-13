@@ -15,7 +15,7 @@ public class CellPanel extends JPanel {
 
     private Color defaultBackground;
     private Coordinates coordinates;
-    public static boolean clicked = false; //
+    public  boolean clicked = false; //
     public static boolean isClickedPanel = false; //
     private ComponentPanel componentPanel;
     private static int counterVertical= 0 ;

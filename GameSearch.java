@@ -31,19 +31,25 @@ public abstract class GameSearch {
 
     public  void playGameHumenVsHuman(Position startingPosition, boolean role) throws IOException {
         positionPanel = startingPosition;
-        CellPanel.setRole(!role); // Set the initial role in the GUI
+        //CellPanel.setRole(!role); // Set the initial role in the GUI
         while (true) {
 
         if(!role){
             printPosition(startingPosition);
             System.out.print("\nYour move HUMAN 1:");
             System.out.println("changer le role");
-
-            Move mv1 = createMove();
-            //DomineeringMove mvCast = (DomineeringMove)mv1;
+            while (!CellPanel.isClickedPanel) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+           Move mv1 = createMoveOFinterface();
+            DomineeringMove mvCast = (DomineeringMove)mv1;
             startingPosition = makeMove(startingPosition, PROGRAM, mv1);
             printPosition(startingPosition);
-         //   System.out.println("mv1 ===========================================: x = "+mvCast.moveIndexRow+" y= "+mvCast.moveIndexColl);
+         System.out.println("mv1 ===========================================: x = "+mvCast.moveIndexRow+" y= "+mvCast.moveIndexColl);
             CellPanel.isClickedPanel=false;
             if (wonPosition(startingPosition, PROGRAM)) {
                 System.out.println("Program won");
@@ -58,12 +64,18 @@ public abstract class GameSearch {
                 break;
             }
             role=true;
-            CellPanel.setRole(role); // Set the initial role in the GUI
+            //CellPanel.setRole(role); // Set the initial role in the GUI
         }else{
             System.out.print("\nYour move HUMAN 2:");
             System.out.println("changer le role");
-
-            Move mv1 = createMove();
+            while (!CellPanel.isClickedPanel) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Move mv1 = createMoveOFinterface();
             startingPosition = makeMove(startingPosition, HUMAN, mv1);
             printPosition(startingPosition);
             role=false;
@@ -72,7 +84,6 @@ public abstract class GameSearch {
                 System.out.println("Human won");
                 break;
             }
-
 
             if(startingPosition ==null){
                 System.out.println("Drawn game");
