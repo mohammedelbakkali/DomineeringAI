@@ -10,11 +10,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class GameUi {
         public JLabel turnLabel2 = new JLabel("----");
         private String selectedMode;
         public ArrayList<Position> listPrtiesSave;
+        public boolean wantHelp = false;
         public Boolean humanVsHuman = false;
         public Boolean humanVsProgram = false;
 
@@ -132,14 +134,17 @@ public class GameUi {
         JPanel eastPanel = new JPanel();
         eastPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton helpButton = new JButton("request help");
-        helpButton.setPreferredSize(new Dimension(150, 30)); // Set preferred size
+        helpButton.setPreferredSize(new Dimension(150, 30));
 
-        // Add an ActionListener for the help button
-        helpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle the action when the help button is clicked
-                // You can call a method or perform any other action here
+        helpButton.addActionListener(e -> {
+            System.out.println("Asking for help...");
+            if (GameSearch.helpRequestsRemaining > 0) {
+                GameSearch.helpRequestsRemaining--;
+                wantHelp = true;
+                System.out.println("Help provided!");
+                System.out.println("Remaining helps: " + GameSearch.helpRequestsRemaining);
+            } else {
+                System.out.println("No remaining helps :(");
             }
         });
 
@@ -191,5 +196,8 @@ public class GameUi {
     }
     public String getSelectedMode() {
         return selectedMode;
+    }
+    public boolean getWantHelp() {
+        return wantHelp;
     }
 }

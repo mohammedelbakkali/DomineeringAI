@@ -11,12 +11,12 @@ import java.util.Vector;
 
 
 public abstract class GameSearch {
-
     public static final boolean DEBUG = false;
     public static boolean PROGRAM = false;
     public static boolean HUMAN = true;
 
     public static boolean game = false;
+
 
 
     /**             Abstract methods                     */
@@ -29,10 +29,13 @@ public abstract class GameSearch {
     public abstract Position makeMove(Position p,boolean player,Move move);
     public abstract boolean reachedMaxDepth(Position p ,int depth);
     public abstract Move createMove() throws IOException;
+    public abstract Position provideHelp(Position position, GameUi gameUi);
     public abstract Move createMoveOFinterface();
     public abstract void makeMoveAlphaBeta(Position p);
     public  Position positionPanel;
+    public static int helpRequestsRemaining = 3;
     public static Position forSave;
+
     public JFrame f;
     public static int depthNiveau;
     public void   alertGame(String txt){

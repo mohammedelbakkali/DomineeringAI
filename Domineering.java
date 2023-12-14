@@ -9,6 +9,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Vector;
 
 import static GameSearchDomineering.ui.ComponentPanel.getCellPanel;
 
@@ -25,6 +26,24 @@ public class Domineering extends GameSearch{
     Domineering(ComponentPanel a){
         this.componentPanel=a;
     }
+
+    @Override
+    public Position provideHelp(Position position, GameUi gameUi) {
+
+        // Call alphaBeta to suggest a move
+        Vector suggestedMoveVector = alphaBeta(3, position, true, gameUi);
+
+        // Extract the suggested move from the result
+        if (suggestedMoveVector.size() > 1) {
+            Position suggestedMove = (Position) suggestedMoveVector.elementAt(1);
+            System.out.println("Suggested move: " + suggestedMove);
+            return suggestedMove;
+        } else {
+            System.out.println("No valid move suggested.");
+        }
+        return null;
+    }
+
 
     @Override
     public boolean drawnPosition(Position p) {
@@ -590,6 +609,10 @@ public class Domineering extends GameSearch{
 
         }
 
+        boolean wantHelp =gameUi.getWantHelp();
+        if(wantHelp){
+            System.out.println("OKKKKK");
+        }
 
     }
 
