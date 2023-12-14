@@ -559,6 +559,7 @@ public class Domineering extends GameSearch{
 
         Domineering ttt = new Domineering(cp);
         GameUi gameUi = new GameUi(cp);
+//        gameUi.turnLabel2.setText("Player 1's");
 
         while (gameUi.getSelectedMode() == null) {
             try {
@@ -570,22 +571,22 @@ public class Domineering extends GameSearch{
 
         String selectedMode = gameUi.getSelectedMode();
         if ("Human vs Human".equals(selectedMode)) {
-            ttt.playGameHumenVsHuman(p, true);
-        } else if ("Human vs Program(EASY)".equals(selectedMode)) {
+            ttt.playGameHumenVsHuman(p, true, gameUi);
+        } else if ("Human vs AI (Easy)".equals(selectedMode)) {
             depthNiveau=2;
             depthGame=2;
-            ttt.playGameHumanVsProgram(p, true);
+            ttt.playGameHumanVsProgram(p, true, gameUi);
 
 
-        } else if ("Human vs Program(MEDIUM)".equals(selectedMode)) {
+        } else if ("Human vs AI (Medium)".equals(selectedMode)) {
             depthNiveau=4;
             depthGame=4;
-            ttt.playGameHumanVsProgram(p, true);
+            ttt.playGameHumanVsProgram(p, true, gameUi);
 
-        } else if ("Human vs Program(hard)".equals(selectedMode)) {
+        } else if ("Human vs AI (Hard)".equals(selectedMode)) {
             depthNiveau=5;
             depthGame=5;
-            ttt.playGameHumanVsProgram(p, true);
+            ttt.playGameHumanVsProgram(p, true, gameUi);
 
         }
 

@@ -12,79 +12,72 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GameUi {
-    private String selectedMode;
-
-       public ArrayList<Position> listPrtiesSave;
-
-         public Boolean humanVsHuman = false;
-         public Boolean humanVsProgram = false;
-
+        public JLabel turnLabel2 = new JLabel("----");
+        private String selectedMode;
+        public ArrayList<Position> listPrtiesSave;
+        public Boolean humanVsHuman = false;
+        public Boolean humanVsProgram = false;
 
         public GameUi(ComponentPanel p){
             listPrtiesSave = new ArrayList<>();
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    // Première fenêtre
-                    JFrame frame1 = new JFrame("Page 1");
+                    JFrame frame1 = new JFrame("Domineering Game");
                     frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     frame1.setLayout(new BorderLayout());
-                    frame1.setSize(600, 500);
-                    frame1.setLayout(new FlowLayout(FlowLayout.CENTER)); // Utilisez FlowLayout avec alignement au centre
-                    JButton nextPageButton = new JButton("Go to Page 2");
+                    frame1.setSize(1100, 700);
+
+                    JPanel panel = new JPanel(new BorderLayout());
+                    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+                    // Welcome text
+                    JLabel labelText1 = new JLabel("Welcome to");
+                    labelText1.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    labelText1.setBorder(BorderFactory.createEmptyBorder(150, 0, 0, 0)); // Adjust top padding
+                    labelText1.setFont(new Font("Arial", Font.BOLD, 20));
+                    panel.add(labelText1);
+
+                    JLabel labelText2 = new JLabel("<html><font color='#C35E61'>Domineering</font> <font color='#7EB6E9'>Game</font></html>");
+                    labelText2.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    labelText2.setHorizontalAlignment(JLabel.CENTER); // Set horizontal alignment
+                    labelText2.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
+                    labelText2.setFont(new Font("Arial", Font.BOLD, 30));
+                    panel.add(Box.createRigidArea(new Dimension(0, 10))); // Add vertical spacing
+                    panel.add(labelText2);
+
+
+                    // Combo box
+                    String niveau[] = {"  mode   ", "Human vs Human", "Human vs AI (Easy)", "Human vs AI (Medium)", "Human vs AI (Hard)"};
+                    final JComboBox cb = new JComboBox(niveau);
+                    cb.setPreferredSize(new Dimension(150, 20));
+                    cb.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    cb.setMaximumSize(new Dimension(300, 30));
+                    panel.add(Box.createRigidArea(new Dimension(0, 20))); // Add vertical spacing
+                    panel.add(cb);
+
+                    // Start button
+                    JButton nextPageButton = new JButton("Start");
+                    nextPageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                     nextPageButton.setPreferredSize(new Dimension(150, 50));
-                    nextPageButton.addActionListener(new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            // Lorsque le bouton est cliqué, passer à la deuxième page
-                            Domineering.choos=true;
-                            System.out.println("change choos");
-                            frame1.dispose(); // Fermer la première fenêtre
-                            showPage2(p); // Afficher la deuxième fenêtre
-                        }
+                    nextPageButton.addActionListener(e -> {
+                        Domineering.choos = true;
+                        System.out.println("change choose");
+                        frame1.dispose();
+                        showPage2(p);
                     });
+                    panel.add(Box.createRigidArea(new Dimension(0, 20))); // Add vertical spacing
+                    panel.add(nextPageButton);
 
-                    frame1.add(nextPageButton, BorderLayout.CENTER);
-
-
-                    final JLabel label = new JLabel();
-                    label.setHorizontalAlignment(JLabel.CENTER);
-                    label.setSize(400,100);
-                    JButton b=new JButton("Show");
-                    b.setBounds(200,100,75,20);
-                    String niveau[]={"  mode   ","Human vs Human","Human vs Program(EASY)","Human vs Program(MEDIUM)","Human vs Program(hard)"};
-                    final JComboBox cb=new JComboBox(niveau);
-                    cb.setSize(100,100);
-                    cb.setBounds(50, 100,90,20);
-                    frame1.add(cb); frame1.add(label); frame1.add(b);
-
-
-                    b.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            String data = "Programming language Selected: "
-                                    + cb.getItemAt(cb.getSelectedIndex());
-                            label.setText(data);
-                        }});
-
-
-                     // Créer un ActionListener pour le JComboBox
                     cb.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            // Récupérer la valeur sélectionnée
                             String selectedValue = (String) cb.getSelectedItem();
-                             selectedMode = (String) cb.getSelectedItem();
-                            // Comparaison
+                            selectedMode = (String) cb.getSelectedItem();
                         }
                     });
 
-
-
-
-
-                        // Pack et afficher le frame
-                  //  frame1.pack();
+                    frame1.add(panel, BorderLayout.CENTER);
                     frame1.setLocationRelativeTo(null);
                     frame1.setVisible(true);
                 }
@@ -96,7 +89,7 @@ public class GameUi {
     private void showPage2(ComponentPanel p) {
 
 
-        JFrame frame = new JFrame("Domineering");
+        JFrame frame = new JFrame("Domineering Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.add(p, BorderLayout.CENTER);
@@ -111,7 +104,6 @@ public class GameUi {
         JMenuItem exitMenuItem = new JMenuItem("Quitter");
         JMenu partie1  = new JMenu("partie 1");
         //=======================================
-        JMenuItem help_me = new JMenuItem("help me?");
 
         // Ajouter un écouteur d'événements pour le menu Quitter
         partie1.addActionListener(new ActionListener() {
@@ -120,13 +112,6 @@ public class GameUi {
                 //  DisplayPanelBord(p);
                 System.out.println("save la partie");
                 listPrtiesSave.add(GameSearch.forSave);
-
-            }
-        });
-        help_me.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //  DisplayPanelBord(p);
 
             }
         });
@@ -140,11 +125,51 @@ public class GameUi {
         menuBar.add(fileMenu);
         menuBar.add(sauvegarder);
         menuBar.add(comeBack);
-        menuBar.add(help_me);
         menuBar.add(listeJeu);
         // Définir la barre de menu pour le frame
         frame.setJMenuBar(menuBar);
 
+        JPanel eastPanel = new JPanel();
+        eastPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JButton helpButton = new JButton("request help");
+        helpButton.setPreferredSize(new Dimension(150, 30)); // Set preferred size
+
+        // Add an ActionListener for the help button
+        helpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Handle the action when the help button is clicked
+                // You can call a method or perform any other action here
+            }
+        });
+
+        eastPanel.add(helpButton);
+        frame.add(eastPanel, BorderLayout.EAST);
+
+        // Create a panel for the turn indication
+        JPanel turnPanel = new JPanel();
+        turnPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+// Create JLabels for each word
+        JLabel turnLabel1 = new JLabel("It's");
+        turnLabel1.setFont(new Font("Arial", Font.BOLD, 20));
+        turnLabel2.setFont(new Font("Arial", Font.BOLD, 20));
+        JLabel turnLabel3 = new JLabel("turn");
+        turnLabel3.setFont(new Font("Arial", Font.BOLD, 20));
+
+
+// Customize the labels as needed
+// ...
+
+// Add JLabels to the turn panel
+        turnPanel.add(turnLabel1);
+        turnPanel.add(turnLabel2);
+        turnPanel.add(turnLabel3);
+
+
+
+        // Add the turn label to your frame
+        frame.add(turnPanel, BorderLayout.NORTH);
 
 
 

@@ -38,9 +38,9 @@ public class ComponentPanel extends JPanel {
 
                    Border border = null;
                    border = new MatteBorder(1, 1, 1, 1, Color.lightGray);
-                   String position = ""+row+"; "+col;
-                   JLabel label = new JLabel(position);
-                   cellPanel.add(label);
+//                   String position = ""+row+"; "+col;
+//                   JLabel label = new JLabel(position);
+//                   cellPanel.add(label);
                    cellPanel.setBorder(border);
                    mapCellPanel.put(cellPanel,new Coordinates(row,col));
                    add(cellPanel,gbc);
@@ -77,7 +77,7 @@ public class ComponentPanel extends JPanel {
         Map<CellPanel, Coordinates> map = getMapCellPanel();
 
         for(Map.Entry<CellPanel,Coordinates> item :map.entrySet()){
-            System.out.println(item.getValue().row+";"+item.getValue().col);
+//            System.out.println(item.getValue().row+";"+item.getValue().col);
             if(item.getValue().row==coordinates.row && item.getValue().col==coordinates.col && !item.getKey().clicked){
                 return item.getKey();
             }

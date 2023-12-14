@@ -1,6 +1,8 @@
 package GameSearchDomineering;
 
 import GameSearchDomineering.ui.CellPanel;
+import GameSearchDomineering.ui.ComponentPanel;
+import GameSearchDomineering.ui.GameUi;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -40,7 +42,8 @@ public abstract class GameSearch {
 
     // The alphaBeta method is a wrapper that initializes alpha and beta values
     // and then calls alphaBetaHelper.
-    protected Vector alphaBeta(int depth, Position p, boolean player) {
+    protected Vector alphaBeta(int depth, Position p, boolean player, GameUi gameUi) {
+        gameUi.turnLabel2.setText("<html><font color='#7EB6E9'>AI 's</font></html>");
         return alphaBetaHelper(depth, p, player, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY);
     }
 
@@ -93,16 +96,16 @@ public abstract class GameSearch {
         return v3;
     }
 
-    public void playGameHumanVsProgram(Position startingPosition, boolean role) throws IOException {
+    public void playGameHumanVsProgram(Position startingPosition, boolean role, GameUi gameUi) throws IOException {
         forSave=startingPosition;
         CellPanel.role= role;
+        gameUi.turnLabel2.setText("<html><font color='#C35E61'>your</font></html>");
         if (role == false) { //means program play
-            Vector v = alphaBeta(0, startingPosition, PROGRAM);
+            Vector v = alphaBeta(0, startingPosition, PROGRAM, gameUi);
             System.out.println("================" + v);
             startingPosition = (Position) v.elementAt(1);
             makeMoveAlphaBeta(startingPosition);
             // startingPosition = makeMove(startingPosition, HUMAN, move);
-
         }
         while (true) {
             makeMoveAlphaBeta(startingPosition);
@@ -130,6 +133,7 @@ public abstract class GameSearch {
                     e.printStackTrace();
                 }
             }
+            gameUi.turnLabel2.setText("<html><font color='##C35E61'>your</font></html>");
 
             Move move = createMoveOFinterface();
             startingPosition = makeMove(startingPosition, HUMAN, move);
@@ -145,33 +149,38 @@ public abstract class GameSearch {
                 break;
             }
 
-            Vector v = alphaBeta(0, startingPosition, PROGRAM);
+            Vector v = alphaBeta(0, startingPosition, PROGRAM, gameUi);
             System.out.println("================" + v);
             Enumeration enum2 = v.elements();
             while (enum2.hasMoreElements()) {
                 System.out.println(" next element: " + enum2.nextElement());
             }
+            gameUi.turnLabel2.setText("<html><font color='#C35E61'>your</font></html>");
 
             startingPosition = (Position) v.elementAt(1);
 
 
-            if (startingPosition == null) {
-               if(role){
-                   System.out.println("Human won");
-                   alertGame("Human won");
-                   break;
-               }else{
-                   System.out.println("Program won");
-                   alertGame("Program won");
-                   break;
-               }
+            if (startingPosition != null) {
+                if (wonPosition(startingPosition, PROGRAM)) {
+                    System.out.println("Program won");
+                    alertGame("Program won");
+                }
+                if (wonPosition(startingPosition, HUMAN)) {
+                    System.out.println("Human won");
+                    alertGame("Human won");
+                }
+                if (drawnPosition(startingPosition)) {
+                    System.out.println("Drawn game");
+                }
             }
         }
     }
 
-    public  void playGameHumenVsHuman(Position startingPosition, boolean role) throws IOException {
+    public  void playGameHumenVsHuman(Position startingPosition, boolean role, GameUi gameUi) throws IOException {
         positionPanel = startingPosition;
         forSave=startingPosition;
+//        ComponentPanel cp = new ComponentPanel();
+//        GameUi gameUi = new GameUi(cp);
         //CellPanel.setRole(!role); // Set the initial role in the GUI
         CellPanel.setRole(role);
         boolean etat=true;
@@ -180,11 +189,13 @@ public abstract class GameSearch {
             if (startingPosition != null) {
                 if (wonPosition(startingPosition, PROGRAM)) {
                     System.out.println("Program won");
+                    alertGame("Program won");
                     etat=false;
                     break;
                 }
                 if (wonPosition(startingPosition, HUMAN)) {
                     System.out.println("Human won");
+                    alertGame("Human won");
                     etat=false;
                     break;
                 }
@@ -198,6 +209,7 @@ public abstract class GameSearch {
                 break;
             }
             if(role==false){
+                gameUi.turnLabel2.setText("<html><font color='#7EB6E9'>Player 2 's</font></html>");
                 printPosition(startingPosition);
                 System.out.print("\nYour move PROGRAM:");
                 System.out.println("changer le role");
@@ -221,6 +233,7 @@ public abstract class GameSearch {
                 role=true;
                 CellPanel.setRole(role); // Set the initial role in the GUI
             }else{
+                gameUi.turnLabel2.setText("<html><font color='#C35E61'>Player 1 's</font></html>");
                 System.out.print("\nYour move HUMAN :");
                 System.out.println("changer le role");
 
