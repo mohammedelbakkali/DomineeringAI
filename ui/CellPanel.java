@@ -27,13 +27,13 @@ public class CellPanel extends JPanel {
     public static boolean role;
     public static Coordinates coordinatesPointer;
 
-   public Domineering p;
+    public Domineering p;
     public CellPanel(ComponentPanel componentPanel,Coordinates coordinates,boolean clicked) {
-               this.clicked=clicked;
-               this.componentPanel=componentPanel;
-               this.coordinates=coordinates;
-               eventMouseTraitement();
-               p=new Domineering();
+        this.clicked=clicked;
+        this.componentPanel=componentPanel;
+        this.coordinates=coordinates;
+        eventMouseTraitement();
+        p=new Domineering();
     }
 
 
@@ -43,7 +43,7 @@ public class CellPanel extends JPanel {
         return new Dimension(100,100);
     }
 
-  public  void eventMouseTraitement(){
+    public  void eventMouseTraitement(){
         defaultBackground = getBackground();
         addMouseListener(new MouseAdapter() {
 
@@ -57,8 +57,9 @@ public class CellPanel extends JPanel {
                     adjTrue=searchAdjCell(coordinates,true);
                     if(adjTrue!=null){
                         isClickedPanel=true;
-                        setBackground(Color.BLUE);
-                        adjTrue.setBackground(Color.BLUE);
+                        Color currentColor = new Color(195, 94, 97);
+                        setBackground(currentColor);
+                        adjTrue.setBackground(currentColor);
                         clicked=true;
                         coordinatesPointer=coordinates;
                         adjTrue.setClicked(true);
@@ -70,8 +71,9 @@ public class CellPanel extends JPanel {
                     adjFalse=searchAdjCell(coordinates,false);
                     if(adjFalse!=null){
                         isClickedPanel=true;
-                        setBackground(Color.GREEN);
-                        adjFalse.setBackground(Color.GREEN);
+                        Color currentColor = new Color(126, 182, 233);
+                        setBackground(currentColor);
+                        adjFalse.setBackground(currentColor);
                         clicked=true;
                         adjFalse.setClicked(true);
                         coordinatesPointer=coordinates;
@@ -91,16 +93,18 @@ public class CellPanel extends JPanel {
                 if(role && !clicked){
 
                     adjTrue=searchAdjCell(coordinates,true);
-               if(adjTrue!=null){
-                   setBackground(Color.BLUE);
-                   adjTrue.setBackground(Color.BLUE);
-               }
+                    if(adjTrue!=null){
+                        Color currentColor = new Color(195, 94, 97);
+                        setBackground(currentColor);
+                        adjTrue.setBackground(currentColor);
+                    }
                 }else if(!role && !clicked){
 
                     adjFalse=searchAdjCell(coordinates,false);
                     if(adjFalse!=null){
-                        setBackground(Color.GREEN);
-                        adjFalse.setBackground(Color.GREEN);
+                        Color currentColor = new Color(126, 182, 233);
+                        setBackground(currentColor);
+                        adjFalse.setBackground(currentColor);
                     }
                 }
             }
@@ -108,19 +112,19 @@ public class CellPanel extends JPanel {
             @Override
             public void mouseExited(MouseEvent e) {
 
-                 if(role && !clicked){
-                     if(adjTrue!=null){
-                         adjTrue.setBackground(defaultBackground);
-                         setBackground(defaultBackground);
-                     }
-                 }else if(!role && !clicked){
-                     if(adjFalse != null){
-                         setBackground(defaultBackground);
-                         adjFalse.setBackground(defaultBackground);
-                     }
-                 }
-
+                if(role && !clicked){
+                    if(adjTrue!=null){
+                        adjTrue.setBackground(defaultBackground);
+                        setBackground(defaultBackground);
+                    }
+                }else if(!role && !clicked){
+                    if(adjFalse != null){
+                        setBackground(defaultBackground);
+                        adjFalse.setBackground(defaultBackground);
+                    }
                 }
+
+            }
 
         });
     }
@@ -133,4 +137,3 @@ public class CellPanel extends JPanel {
         CellPanel.role = role;
     }
 }
-
