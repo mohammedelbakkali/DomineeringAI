@@ -213,11 +213,11 @@ public abstract class GameSearch {
             }
             if(role==false){
                 gameUi.turnLabel2.setText("<html><font color='#7EB6E9'>Player 2 's</font></html>");
-                printPosition(startingPosition);
+//                printPosition(startingPosition);
                 System.out.print("\nYour move PROGRAM:");
                 System.out.println("changer le role");
 
-                while (!CellPanel.isClickedPanel) {
+                while (!CellPanel.isClickedPanel && GameUi.wantHelp==false) {
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
@@ -225,36 +225,75 @@ public abstract class GameSearch {
                     }
                 }
 
-                Move mv1 = createMoveOFinterface();
-                DomineeringMove mvCast = (DomineeringMove)mv1;
+                if (GameUi.wantHelp==true){
+                    System.out.println("OOOOOOOKKKKKK");
 
-                //Move mv1 = createMove();
-                startingPosition = makeMove(startingPosition, PROGRAM, mv1);
-                printPosition(startingPosition);
-                System.out.println("mv1 ===========================================: x = "+mvCast.moveIndexRow+" y= "+mvCast.moveIndexColl);
-                CellPanel.isClickedPanel=false;
-                role=true;
-                CellPanel.setRole(role); // Set the initial role in the GUI
-            }else{
+
+                    Vector v = alphaBeta(0, startingPosition, false, gameUi);
+                    System.out.println("================" + v);
+                    System.out.println(v.elementAt(1));
+                    startingPosition = (Position) v.elementAt(1);
+                    makeMoveAlphaBeta(startingPosition);
+
+
+                    CellPanel.isClickedPanel=false;
+                    role=true;
+                    CellPanel.setRole(role);
+                    GameUi.wantHelp=false;
+                } else if (CellPanel.isClickedPanel) {
+                    Move mv1 = createMoveOFinterface();
+                    DomineeringMove mvCast = (DomineeringMove)mv1;
+
+                    //Move mv1 = createMove();
+                    startingPosition = makeMove(startingPosition, PROGRAM, mv1);
+                    printPosition(startingPosition);
+                    System.out.println("mv1 ===========================================: x = "+mvCast.moveIndexRow+" y= "+mvCast.moveIndexColl);
+                    CellPanel.isClickedPanel=false;
+                    role=true;
+                    CellPanel.setRole(role);
+                }
+            }
+             else{
                 gameUi.turnLabel2.setText("<html><font color='#C35E61'>Player 1 's</font></html>");
                 System.out.print("\nYour move HUMAN :");
                 System.out.println("changer le role");
 
 
-                while (!CellPanel.isClickedPanel) {
+
+                while (!CellPanel.isClickedPanel && GameUi.wantHelp==false) {
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                CellPanel.isClickedPanel=false;
-                Move mv1 = createMoveOFinterface();
-                //Move mv1 = createMove();
-                startingPosition = makeMove(startingPosition, HUMAN, mv1);
-                printPosition(startingPosition);
-                role=false;
-                CellPanel.setRole(role); // Set the initial role in the GUI
+
+                if (GameUi.wantHelp==true){
+                    System.out.println("OOOOOOOKKKKKK");
+                    GameUi.wantHelp=false;
+
+
+                    // Call alphaBeta to suggest a move
+                    Vector v = alphaBeta(0, startingPosition, true, gameUi);
+                    System.out.println("================" + v);
+                    startingPosition = (Position) v.elementAt(1);
+                    makeMoveAlphaBeta(startingPosition);
+
+
+                    gameUi.turnLabel2.setText("<html><font color='#7EB6E9'>Player 2 's</font></html>");
+                    CellPanel.isClickedPanel=false;
+                    role=false;
+                    CellPanel.setRole(role);
+                    GameUi.wantHelp=false;
+                } else if (CellPanel.isClickedPanel) {
+                    CellPanel.isClickedPanel=false;
+                    Move mv1 = createMoveOFinterface();
+                    //Move mv1 = createMove();
+                    startingPosition = makeMove(startingPosition, HUMAN, mv1);
+                    printPosition(startingPosition);
+                    role=false;
+                    CellPanel.setRole(role);
+                }
 
                 if(startingPosition ==null){
                     System.out.println("Drawn game");

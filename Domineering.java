@@ -21,7 +21,7 @@ public class Domineering extends GameSearch{
     public static boolean humanVsHuman = false;
     public static boolean humanVsProgram = false;
     public static boolean choos = false;
-    public static int depthGame = 0;
+    public static int depthGame = 4;
 
     Domineering(ComponentPanel a){
         this.componentPanel=a;
@@ -32,7 +32,6 @@ public class Domineering extends GameSearch{
 
         // Call alphaBeta to suggest a move
         Vector suggestedMoveVector = alphaBeta(3, position, true, gameUi);
-
         // Extract the suggested move from the result
         if (suggestedMoveVector.size() > 1) {
             Position suggestedMove = (Position) suggestedMoveVector.elementAt(1);
@@ -578,7 +577,6 @@ public class Domineering extends GameSearch{
 
         Domineering ttt = new Domineering(cp);
         GameUi gameUi = new GameUi(cp);
-//        gameUi.turnLabel2.setText("Player 1's");
 
         while (gameUi.getSelectedMode() == null) {
             try {
@@ -609,10 +607,6 @@ public class Domineering extends GameSearch{
 
         }
 
-        boolean wantHelp =gameUi.getWantHelp();
-        if(wantHelp){
-            System.out.println("OKKKKK");
-        }
 
     }
 

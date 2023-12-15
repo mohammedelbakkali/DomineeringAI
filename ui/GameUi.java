@@ -16,7 +16,7 @@ public class GameUi {
         public JLabel turnLabel2 = new JLabel("----");
         private String selectedMode;
         public ArrayList<Position> listPrtiesSave;
-        public boolean wantHelp = false;
+        public static boolean wantHelp = false;
         public Boolean humanVsHuman = false;
         public Boolean humanVsProgram = false;
 
@@ -141,6 +141,7 @@ public class GameUi {
             if (GameSearch.helpRequestsRemaining > 0) {
                 GameSearch.helpRequestsRemaining--;
                 wantHelp = true;
+                System.out.println(wantHelp);
                 System.out.println("Help provided!");
                 System.out.println("Remaining helps: " + GameSearch.helpRequestsRemaining);
             } else {
@@ -196,8 +197,5 @@ public class GameUi {
     }
     public String getSelectedMode() {
         return selectedMode;
-    }
-    public boolean getWantHelp() {
-        return wantHelp;
     }
 }
