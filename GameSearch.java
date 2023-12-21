@@ -1,7 +1,6 @@
 package GameSearchDomineering;
 
 import GameSearchDomineering.ui.CellPanel;
-import GameSearchDomineering.ui.ComponentPanel;
 import GameSearchDomineering.ui.GameUi;
 
 import javax.swing.*;
@@ -38,6 +37,8 @@ public abstract class GameSearch {
 
     public JFrame f;
     public static int depthNiveau;
+
+    //this is the function that announce who the winner is
     public void   alertGame(String txt){
         f=new JFrame();
         JOptionPane.showMessageDialog(f,txt,"Message",JOptionPane.WARNING_MESSAGE);
@@ -55,8 +56,16 @@ public abstract class GameSearch {
         if (GameSearch.DEBUG) System.out.println("alphaBetaHelper("+depth+","+p+","+alpha+","+beta+")");
         if (reachedMaxDepth(p, depth) || drawnPosition(p) || wonPosition(p, true) || wonPosition(p, false)) {
             Vector v = new Vector(2);
-            float value = positionEvaluation(p, player);
-            v.addElement(Float.valueOf(value));
+            float value;
+
+            //this is for game difficulty, if the player chose easy :
+            // we deactivate heuristics so AI goes easy on him
+            if (depthNiveau != 2) {
+                value = positionEvaluation(p, player);
+                v.addElement(Float.valueOf(value));
+            } else {
+                v.addElement(Float.valueOf(0.0F));
+            }
             v.addElement(null);
             if (GameSearch.DEBUG) {
                 System.out.println(" alphaBetaHelper: mx depth at " + depth +
@@ -99,36 +108,46 @@ public abstract class GameSearch {
         return v3;
     }
 
+    //funtion of human vs AI
     public void playGameHumanVsProgram(Position startingPosition, boolean role, GameUi gameUi) throws IOException {
         forSave=startingPosition;
+        //assigning the same role to get displayed in the UI
         CellPanel.role= role;
+        //message to show whose turn is it
         gameUi.turnLabel2.setText("<html><font color='#C35E61'>your</font></html>");
-        if (role == false) { //means program play
+        if (role == false) { //means program play first
             Vector v = alphaBeta(0, startingPosition, PROGRAM, gameUi);
             System.out.println("================" + v);
             startingPosition = (Position) v.elementAt(1);
-            makeMoveAlphaBeta(startingPosition);
-            // startingPosition = makeMove(startingPosition, HUMAN, move);
         }
         while (true) {
+            //this function colors the AI's move once he plays
             makeMoveAlphaBeta(startingPosition);
             printPosition(startingPosition);
-            if (wonPosition(startingPosition, PROGRAM)) {
-                System.out.println("Program won");
-                alertGame("Program won");
+            //checking if the game ended
+            if(startingPosition!=null){
+                //AI won?
+                if (wonPosition(startingPosition, PROGRAM)) {
+                    System.out.println("Program won");
+                    alertGame("Program won");
+                    break;
+                }//Human won?
+                if (wonPosition(startingPosition, HUMAN)) {
+                    System.out.println("Human won");
+                    alertGame("Human won");
+                    break;
+                }//drawn game?
+                if (drawnPosition(startingPosition)) {
+                    alertGame("Drawn won");
+                    break;
+                }
+            }else {
+                System.out.println("Game ended unexpectedly. Starting position is null.");
                 break;
             }
-            if (wonPosition(startingPosition, HUMAN)) {
-                System.out.println("Human won");
-                alertGame("Human won");
-                break;
-            }
-            if (drawnPosition(startingPosition)) {
-                alertGame("Drawn won");
-                break;
-            }
+            //if not we continue the game
             System.out.print("\nYour move:");
-
+            //waiting for the player to choose his move and click it
             while (!CellPanel.isClickedPanel) {
                 try {
                     Thread.sleep(50);
@@ -136,14 +155,16 @@ public abstract class GameSearch {
                     e.printStackTrace();
                 }
             }
+            //indicating that it s the player's turn
             gameUi.turnLabel2.setText("<html><font color='##C35E61'>your</font></html>");
-
+            //once clicked we make the move
             Move move = createMoveOFinterface();
             startingPosition = makeMove(startingPosition, HUMAN, move);
 
             printPosition(startingPosition);
-
+            //once we finish the process we set it back to false, so we can wait AGAIN in his next turn
             CellPanel.isClickedPanel=false;
+            //and we switch the role to the opponent
             role=true;
             CellPanel.setRole(role);
 
@@ -162,7 +183,7 @@ public abstract class GameSearch {
 
             startingPosition = (Position) v.elementAt(1);
 
-
+            //Checking again
             if (startingPosition != null) {
                 if (wonPosition(startingPosition, PROGRAM)) {
                     System.out.println("Program won");
@@ -179,26 +200,24 @@ public abstract class GameSearch {
         }
     }
 
-    public  void playGameHumenVsHuman(Position startingPosition, boolean role, GameUi gameUi) throws IOException {
+    //function of human vs human
+    public  void playGameHumanVsHuman(Position startingPosition, boolean role, GameUi gameUi) throws IOException {
         positionPanel = startingPosition;
         forSave=startingPosition;
-//        ComponentPanel cp = new ComponentPanel();
-//        GameUi gameUi = new GameUi(cp);
-        //CellPanel.setRole(!role); // Set the initial role in the GUI
         CellPanel.setRole(role);
         boolean etat=true;
         while (etat) {
 
             if (startingPosition != null) {
                 if (wonPosition(startingPosition, PROGRAM)) {
-                    System.out.println("Program won");
-                    alertGame("Program won");
+                    System.out.println("Player 2 won");
+                    alertGame("Player 2 won");
                     etat=false;
                     break;
                 }
                 if (wonPosition(startingPosition, HUMAN)) {
-                    System.out.println("Human won");
-                    alertGame("Human won");
+                    System.out.println("Player 1 won");
+                    alertGame("Player 1 won");
                     etat=false;
                     break;
                 }

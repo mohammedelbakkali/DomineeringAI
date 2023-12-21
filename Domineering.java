@@ -46,7 +46,6 @@ public class Domineering extends GameSearch{
 
     @Override
     public boolean drawnPosition(Position p) {
-        boolean isFinished = true;
         int countVertical =0;
         int countHorizentale=0;
         if(possibleMoves (p, true) != null){
@@ -62,47 +61,28 @@ public class Domineering extends GameSearch{
     @Override
     public boolean wonPosition(Position p, boolean player) {
         boolean ret = false;
-        int countVertical =0;
-        int countHorizentale=0;
+        int countVertical;
+        int countHorizentale;
+        Position []h = possibleMoves (p, false);
+        Position []v = possibleMoves (p, true);
+        if(v != null){
+            countVertical =v.length;
+        }else {
+            countVertical=0;
+        }
+        if(h != null){
+            countHorizentale = h.length;
+        } else {
+            countHorizentale=0;
+        }
         try{
-
-
-            if (player==true){
-                Position []h= possibleMoves (p, false);
-                Position []v= possibleMoves (p, true);
-                if(v != null){
-                    countVertical =v.length;
-//            System.out.println(countVertical);
-                }
-                if(h != null){
-                    countHorizentale = h.length;
-//            System.out.println(countHorizentale);
-                }
+            if (player){
                 if((countVertical !=0  && countHorizentale ==0)) ret = true;
-
-
-            }else if(player==false){
-                Position []h= possibleMoves (p, false);
-                Position []v= possibleMoves (p, true);
-                if(v != null){
-                    countVertical =v.length;
-//            System.out.println(countVertical);
-                }
-                if(h != null){
-                    countHorizentale = h.length;
-//            System.out.println(countHorizentale);
-                }
+            }else {
                 if(countHorizentale != 0 && countVertical == 0) ret = true;
-            }else{
-                if (countVertical==countHorizentale && countHorizentale == 0) ret=false;
             }
-
-            //traitement:
-
-
-
         }catch (Exception e){
-            e.printStackTrace();
+            System.out.println(e);
         }
         return ret;
     }
@@ -532,45 +512,6 @@ public class Domineering extends GameSearch{
     }
 
 
-    /**
-     public static void main(String[] args) throws IOException {
-     Position pos = new DomineeringPosition();
-     Domineering d = new Domineering();
-     int [][] bord ;
-     bord = new int[][]{{1,0,0,0,0,0},
-     {1,0,0,0,0,0},
-     {0,-1,-1,0,0,0},
-     {0,0,0,0,0,0},
-     {0,0,0,1,0,0},
-     {0,0,0,1,0,0}};
-     ((DomineeringPosition)pos).board =bord;
-     //d.possibleMoves(pos,false);
-
-
-     boolean e =  d.drawPosition(pos);
-     if(e)
-     System.out.println("match fini");
-     else
-     System.out.println("match non fini");
-
-     boolean ret = d.wonPosition(pos,true);
-     if(ret)
-     System.out.println("player won");
-     else
-     System.out.println("player lost");
-
-
-     // Move mv = d.createMove();
-     // Position poss =  d.makeMove(pos,false,mv);
-     //   ((DomineeringPosition) poss).displayBoard();
-
-     d.printPosition(pos);
-
-
-     }
-
-     */
-
     static public void main(String [] args) throws IOException {
         ComponentPanel cp = new ComponentPanel();
         DomineeringPosition p = new DomineeringPosition();
@@ -588,7 +529,7 @@ public class Domineering extends GameSearch{
 
         String selectedMode = gameUi.getSelectedMode();
         if ("Human vs Human".equals(selectedMode)) {
-            ttt.playGameHumenVsHuman(p, true, gameUi);
+            ttt.playGameHumanVsHuman(p, true, gameUi);
         } else if ("Human vs AI (Easy)".equals(selectedMode)) {
             depthNiveau=2;
             depthGame=2;

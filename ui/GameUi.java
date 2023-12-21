@@ -126,7 +126,6 @@ public class GameUi {
         // Ajouter le menu Fichier à la barre de menu
         menuBar.add(fileMenu);
         menuBar.add(sauvegarder);
-        menuBar.add(comeBack);
         menuBar.add(listeJeu);
         // Définir la barre de menu pour le frame
         frame.setJMenuBar(menuBar);
